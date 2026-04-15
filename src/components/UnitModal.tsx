@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ServerlessUnit, UnitComment, UnitFile, getUnitComments, getUnitFilesSummary, addUnitComment, addUnitFile, getUnitFileBase64 } from '../services/neonDb';
+import { getUnitComments, getUnitFilesSummary, addUnitComment, addUnitFile, getUnitFileBase64, type ServerlessUnit, type UnitComment, type UnitFile } from '../services/neonDb';
 import { X, Upload, MessageSquare, AlertTriangle, ShieldCheck, Info, FileText, Image as ImageIcon, Download, Loader2 } from 'lucide-react';
 
 interface UnitModalProps {
