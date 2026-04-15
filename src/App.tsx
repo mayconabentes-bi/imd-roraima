@@ -4,6 +4,7 @@ import { Overview } from './components/Overview';
 import { LegalHub } from './components/LegalHub';
 import { StatsDashboard } from './components/StatsDashboard';
 import { EngStandards } from './components/EngStandards';
+import { SetrabesDirectory } from './components/SetrabesDirectory';
 import { Menu, X } from 'lucide-react';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       case 'legal': return <LegalHub />;
       case 'stats': return <StatsDashboard />;
       case 'eng': return <EngStandards />;
+      case 'units': return <SetrabesDirectory />;
       default: return <Overview />;
     }
   };

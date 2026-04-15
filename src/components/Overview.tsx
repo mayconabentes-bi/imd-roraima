@@ -8,13 +8,14 @@ import {
 } from 'lucide-react';
 import { legalDocs } from '../data/legal';
 import { secretariatStats, incidents } from '../data/stats';
+import { setrabesUnits } from '../data/units';
 
 import { BiddingFeed } from './BiddingFeed';
 
 export const Overview: React.FC = () => {
   const stats = [
     { label: 'Documentos Legais', value: legalDocs.length, icon: Database, color: '#3b82f6' },
-    { label: 'Órgãos Monitorados', value: secretariatStats.length, icon: ShieldCheck, color: '#10b981' },
+    { label: 'Unidades SETRABES', value: setrabesUnits.length, icon: ShieldCheck, color: '#10b981' },
     { label: 'Incidentes Registrados', value: incidents.length, icon: Activity, color: '#f59e0b' },
     { label: 'Normativas Técnicas', value: 12, icon: Cpu, color: '#00f2ff' },
   ];

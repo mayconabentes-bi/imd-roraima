@@ -8,7 +8,8 @@ import {
   Home,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
+  Map as MapIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -33,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'dashboard', label: 'Overview', icon: Home },
     { id: 'legal', label: 'Jurídico', icon: Gavel },
     { id: 'stats', label: 'Dados & Estatísticas', icon: BarChart3 },
+    { id: 'units', label: 'Unidades SETRABES', icon: MapIcon },
     { id: 'eng', label: 'Engenharia', icon: Cpu },
   ];
 
