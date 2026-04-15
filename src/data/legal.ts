@@ -107,5 +107,50 @@ export const legalDocs: LegalDoc[] = [
     url: 'https://selc.rr.gov.br',
     date: '2026-04-15',
     tags: ['SELC', 'Editais', 'SRP']
+  },
+  {
+    id: 'fed-pcd-13146',
+    title: 'Lei Federal nº 13.146 (Estatuto PCD)',
+    category: 'Estatuto',
+    description: 'Lei Brasileira de Inclusão da Pessoa com Deficiência.',
+    url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm',
+    date: '2015-07-06',
+    tags: ['PCD', 'Inclusão', 'Federal']
+  },
+  {
+    id: 'rr-pcd-2335',
+    title: 'Lei Estadual nº 2.335 (Novo Estatuto PCD RR)',
+    category: 'Estatuto',
+    description: 'Institui o novo Estatuto da Pessoa com Deficiência no Estado de Roraima.',
+    url: 'https://www.al.rr.leg.br/',
+    date: '2026-03-03',
+    tags: ['PCD', 'Estadual', 'RR']
+  },
+  {
+    id: 'fed-lgpd-13709',
+    title: 'Lei Federal nº 13.709 (LGPD)',
+    category: 'Orçamento',
+    description: 'Lei Geral de Proteção de Dados Pessoais.',
+    url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm',
+    date: '2018-08-14',
+    tags: ['LGPD', 'Privacidade', 'Federal']
+  },
+  {
+    id: 'rr-seed-lc041',
+    title: 'Lei Complementar nº 041 (Sistema de Educação RR)',
+    category: 'Secretaria',
+    description: 'Dispõe sobre o Sistema Estadual de Educação de Roraima e estruturação da SEED.',
+    url: 'https://legis.rr.leg.br/',
+    date: '2001-07-16',
+    tags: ['SEED', 'Educação', 'Estrutura']
+  },
+  {
+    id: 'rr-fomento-industria',
+    title: 'Lei de Incentivos Fiscais e Fomento (RR)',
+    category: 'Orçamento',
+    description: 'Regulamenta o fomento industrial e incentivos para novos negócios no estado.',
+    url: 'https://seplan.rr.gov.br/',
+    date: '2024-12-20',
+    tags: ['Fomento', 'Economia', 'Incentivos']
   }
 ];

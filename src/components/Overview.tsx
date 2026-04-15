@@ -9,6 +9,8 @@ import {
 import { legalDocs } from '../data/legal';
 import { secretariatStats, incidents } from '../data/stats';
 
+import { BiddingFeed } from './BiddingFeed';
+
 export const Overview: React.FC = () => {
   const stats = [
     { label: 'Documentos Legais', value: legalDocs.length, icon: Database, color: '#3b82f6' },
@@ -43,20 +45,30 @@ export const Overview: React.FC = () => {
       <div className="overview-grid">
         <div className="glass-card main-chart-placeholder">
           <div className="card-header">
-            <h3>Distribuição Orçamentária 2025</h3>
+            <h3>Consolidado Orçamentário 2025 vs 2026</h3>
             <Terminal size={18} color="var(--accent-cyan)" />
           </div>
           <div className="mock-chart">
             {secretariatStats.map(sec => (
               <div key={sec.id} className="chart-bar-group">
                 <div className="bar-label">
-                  <span>{sec.acronym}</span>
-                  <span>R$ {(sec.budget2025 / 1000000).toFixed(0)}M</span>
+                  <div className="sec-label-meta">
+                    <span className="acronym-tag">{sec.acronym}</span>
+                    <button className="pca-link" onClick={() => window.open(sec.pcaUrl, '_blank')}>PCA 2026</button>
+                  </div>
+                  <div className="budget-values">
+                    <span className="v25">R$ {(sec.budget2025 / 1000000).toFixed(0)}M (25)</span>
+                    <span className="v26">R$ {(sec.budget2026 / 1000000).toFixed(0)}M (26)</span>
+                  </div>
                 </div>
                 <div className="bar-bg">
                   <div 
                     className="bar-fill" 
-                    style={{ width: `${(sec.budget2025 / 1200000000) * 100}%` }} 
+                    style={{ width: `${(sec.budget2026 / 1300000000) * 100}%` }} 
+                  />
+                  <div 
+                    className="bar-fill secondary" 
+                    style={{ width: `${(sec.budget2025 / 1300000000) * 100}%` }} 
                   />
                 </div>
               </div>
@@ -64,7 +76,11 @@ export const Overview: React.FC = () => {
           </div>
         </div>
 
-        <div className="glass-card action-hub">
+        <BiddingFeed />
+      </div>
+
+      <div className="overview-grid">
+        <div className="glass-card action-hub" style={{ gridColumn: 'span 2' }}>
           <div className="card-header">
             <h3>Portais de Acesso Rápido</h3>
           </div>
@@ -192,7 +208,49 @@ export const Overview: React.FC = () => {
           background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
           border-radius: 99px;
           box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+          position: relative;
+          z-index: 2;
         }
+
+        .bar-fill.secondary {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: none;
+          z-index: 1;
+        }
+
+        .sec-label-meta {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .acronym-tag {
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+
+        .pca-link {
+          font-size: 0.7rem;
+          background: rgba(0, 242, 255, 0.1);
+          color: var(--accent-cyan);
+          border: 1px solid rgba(0, 242, 255, 0.2);
+          padding: 0.1rem 0.4rem;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .budget-values {
+          display: flex;
+          gap: 1rem;
+          font-family: var(--font-mono);
+          font-size: 0.75rem;
+        }
+
+        .v25 { color: var(--text-secondary); }
+        .v26 { color: var(--accent-cyan); font-weight: 700; }
 
         .action-list {
           display: flex;
