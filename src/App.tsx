@@ -5,6 +5,8 @@ import { LegalHub } from './components/LegalHub';
 import { StatsDashboard } from './components/StatsDashboard';
 import { EngStandards } from './components/EngStandards';
 import { SetrabesDirectory } from './components/SetrabesDirectory';
+import { FinanceAnalytics } from './components/FinanceAnalytics';
+import { Settings } from './components/Settings';
 import { Menu, X } from 'lucide-react';
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
       case 'stats': return <StatsDashboard />;
       case 'eng': return <EngStandards />;
       case 'units': return <SetrabesDirectory />;
+      case 'finance': return <FinanceAnalytics />;
+      case 'settings': return <Settings />;
       default: return <Overview />;
     }
   };

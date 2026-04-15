@@ -9,7 +9,9 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Map as MapIcon
+  Map as MapIcon,
+  TrendingUp,
+  Settings as SettingsIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -35,7 +37,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'legal', label: 'Jurídico', icon: Gavel },
     { id: 'stats', label: 'Dados & Estatísticas', icon: BarChart3 },
     { id: 'units', label: 'Unidades SETRABES', icon: MapIcon },
+    { id: 'finance', label: 'Finanças RR', icon: TrendingUp },
     { id: 'eng', label: 'Engenharia', icon: Cpu },
+    { id: 'settings', label: 'Configurações', icon: SettingsIcon },
   ];
 
   const sidebarVariants = {
