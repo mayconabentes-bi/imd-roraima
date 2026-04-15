@@ -129,3 +129,36 @@ export async function addUnitFile(unitId: string, fileName: string, fileType: st
     return false;
   }
 }
+
+export interface IntelligenceSummary {
+  unit_id: string;
+  files_count: number;
+  comments_count: number;
+}
+
+/**
+ * Inteligência Agregada: Busca contagem de arquivos e comentários para todas as unidades de uma vez.
+ */
+export async function getUnitsIntelligenceSummary(): Promise<Record<string, { files: number, comments: number }>> {
+  try {
+    const files = await sql`SELECT unit_id, count(*) as count FROM unit_files GROUP BY unit_id`;
+    const comments = await sql`SELECT unit_id, count(*) as count FROM unit_comments GROUP BY unit_id`;
+    
+    const summary: Record<string, { files: number, comments: number }> = {};
+    
+    files.forEach((f: any) => {
+      if (!summary[f.unit_id]) summary[f.unit_id] = { files: 0, comments: 0 };
+      summary[f.unit_id].files = parseInt(f.count);
+    });
+    
+    comments.forEach((c: any) => {
+      if (!summary[c.unit_id]) summary[c.unit_id] = { files: 0, comments: 0 };
+      summary[c.unit_id].comments = parseInt(c.count);
+    });
+    
+    return summary;
+  } catch (err) {
+    console.error('Erro ao buscar sumário de inteligência:', err);
+    return {};
+  }
+}

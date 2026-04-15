@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { getLiveSetrabesUnits, type ServerlessUnit } from '../services/neonDb';
+import { getLiveSetrabesUnits, getUnitsIntelligenceSummary, type ServerlessUnit } from '../services/neonDb';
 import { UnitModal } from './UnitModal';
 import { 
   Search, 
   MapPin, 
-  ShieldAlert, 
-  Info,
   Filter,
   Loader2,
-  Database
+  FileText,
+  MessageSquare,
+  Plus
 } from 'lucide-react';
 
 export const SetrabesDirectory: React.FC = () => {
   const [units, setUnits] = useState<ServerlessUnit[]>([]);
+  const [intelligence, setIntelligence] = useState<Record<string, { files: number, comments: number }>>({});
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
@@ -20,14 +21,24 @@ export const SetrabesDirectory: React.FC = () => {
 
   const categories = ['Todos', 'Acolhimento', 'Segurança Alimentar', 'Especializada', 'Logística', 'Sede'];
 
-  useEffect(() => {
-    const fetchDB = async () => {
-      setLoading(true);
-      const data = await getLiveSetrabesUnits();
-      setUnits(data);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [unitsData, intelData] = await Promise.all([
+        getLiveSetrabesUnits(),
+        getUnitsIntelligenceSummary()
+      ]);
+      setUnits(unitsData);
+      setIntelligence(intelData);
+    } catch (err) {
+      console.error('Erro ao carregar diretório:', err);
+    } finally {
       setLoading(false);
-    };
-    fetchDB();
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const filteredUnits = units.filter(unit => {
@@ -42,7 +53,7 @@ export const SetrabesDirectory: React.FC = () => {
       <header className="module-header">
         <div>
           <h1 className="gradient-text">Unidades Estratégicas SETRABES</h1>
-          <p className="subtitle">Gestão de infraestrutura conectada ao vivo via PostgreSQL (Módulo Serverless).</p>
+          <p className="subtitle">Gestão Governamental de Infraestrutura e Inteligência de Dados (PostgreSQL).</p>
         </div>
         {!loading && (
           <div className="live-status">
@@ -57,7 +68,7 @@ export const SetrabesDirectory: React.FC = () => {
           <Search size={20} className="search-icon" />
           <input 
             type="text" 
-            placeholder="Buscar por nome ou endereço..." 
+            placeholder="Buscar por unidade, endereço ou categoria..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -79,12 +90,10 @@ export const SetrabesDirectory: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="loading-state glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div className="loading-state glass-card" style={{ padding: '4rem', textAlign: 'center' }}>
           <Loader2 size={48} className="animate-spin text-cyan" style={{ margin: '0 auto 1rem' }} />
-          <h3>Sincronizando com Banco de Dados</h3>
-          <p style={{ color: 'var(--text-secondary)' }}>
-            Estabelecendo túnel seguro com PostgreSQL (US-EAST-1)...
-          </p>
+          <h3>Sincronizando Inteligência...</h3>
+          <p style={{ color: 'var(--text-secondary)' }}>Acessando base de dados serverless em US-EAST-1...</p>
         </div>
       ) : (
         <div className="units-grid">
@@ -92,7 +101,21 @@ export const SetrabesDirectory: React.FC = () => {
             filteredUnits.map((unit) => (
               <div key={unit.id} className="glass-card unit-card" onClick={() => setSelectedUnit(unit)}>
                 <div className="unit-header">
-                  <span className="unit-id">{unit.id}</span>
+                  <div className="unit-id-group">
+                    <span className="unit-id">{unit.id}</span>
+                    <div className="unit-intel-badges">
+                      {intelligence[unit.id]?.files > 0 && (
+                        <span className="intel-badge files">
+                          <FileText size={10} /> {intelligence[unit.id].files}
+                        </span>
+                      )}
+                      {intelligence[unit.id]?.comments > 0 && (
+                        <span className="intel-badge comments">
+                          <MessageSquare size={10} /> {intelligence[unit.id].comments}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <span className={`category-badge ${unit.category.toLowerCase().replace(' ', '-')}`}>
                     {unit.category}
                   </span>
@@ -105,29 +128,15 @@ export const SetrabesDirectory: React.FC = () => {
                     <MapPin size={16} className="icon-blue" />
                     <span>{unit.address}</span>
                   </div>
-                  <div className="info-item">
-                    <Info size={16} className="icon-cyan" />
-                    <p className="function-text">{unit.function_desc}</p>
-                  </div>
-                </div>
-
-                <div className="risk-assessment">
-                  <div className="assessment-header">
-                    <ShieldAlert size={16} />
-                    <span>Perfil de Risco & Justificativa</span>
-                  </div>
-                  <p>{unit.risk_profile}</p>
                 </div>
 
                 <div className="unit-footer">
                   <span className="public-served">Público: {unit.public_served}</span>
                   <button 
-                    className="source-btn" 
+                    className="action-btn-primary" 
                     onClick={(e) => { e.stopPropagation(); setSelectedUnit(unit); }}
-                    title="Acessar Banco de Arquivos"
                   >
-                    <Database size={14} />
-                    Origem
+                    <Plus size={14} /> Anexar / Log
                   </button>
                 </div>
               </div>
@@ -141,7 +150,13 @@ export const SetrabesDirectory: React.FC = () => {
       )}
 
       {selectedUnit && (
-        <UnitModal unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
+        <UnitModal 
+          unit={selectedUnit} 
+          onClose={() => {
+            setSelectedUnit(null);
+            fetchData();
+          }} 
+        />
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -180,12 +195,7 @@ export const SetrabesDirectory: React.FC = () => {
           scrollbar-width: none;
         }
 
-        .filter-icon { color: var(--text-secondary); }
-
-        .tabs {
-          display: flex;
-          gap: 0.75rem;
-        }
+        .tabs { display: flex; gap: 0.75rem; }
 
         .tab-btn {
           background: transparent;
@@ -208,7 +218,7 @@ export const SetrabesDirectory: React.FC = () => {
 
         .units-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
           gap: 1.5rem;
         }
 
@@ -217,13 +227,16 @@ export const SetrabesDirectory: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 1.25rem;
-          border-bottom: 3px solid transparent;
-          transition: transform 0.2s;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          border-bottom: 2px solid transparent;
         }
 
         .unit-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-5px);
           border-bottom-color: var(--accent-cyan);
+          background: rgba(255, 255, 255, 0.03);
+          box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
         .unit-header {
@@ -232,19 +245,43 @@ export const SetrabesDirectory: React.FC = () => {
           align-items: center;
         }
 
-        .unit-id {
-          font-family: var(--font-mono);
-          font-size: 0.75rem;
-          color: var(--text-secondary);
+        .unit-id-group {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
         }
 
+        .unit-id {
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          color: var(--text-secondary);
+          opacity: 0.6;
+        }
+
+        .unit-intel-badges {
+          display: flex;
+          gap: 0.3rem;
+        }
+
+        .intel-badge {
+          display: flex;
+          align-items: center;
+          gap: 0.2rem;
+          font-size: 0.6rem;
+          padding: 0.1rem 0.4rem;
+          border-radius: 4px;
+          font-weight: 700;
+        }
+
+        .intel-badge.files { background: rgba(0, 242, 255, 0.1); color: var(--accent-cyan); border: 1px solid rgba(0, 242, 255, 0.2); }
+        .intel-badge.comments { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
+
         .category-badge {
-          font-size: 0.65rem;
+          font-size: 0.6rem;
           text-transform: uppercase;
           font-weight: 800;
-          padding: 0.2rem 0.6rem;
+          padding: 0.15rem 0.5rem;
           border-radius: 4px;
-          letter-spacing: 0.05em;
         }
 
         .category-badge.sede { background: #3b82f6; color: white; }
@@ -253,45 +290,8 @@ export const SetrabesDirectory: React.FC = () => {
         .category-badge.especializada { background: #8b5cf6; color: white; }
         .category-badge.logística { background: #6b7280; color: white; }
 
-        .unit-info {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .info-item {
-          display: flex;
-          gap: 0.75rem;
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-        }
-
-        .info-item span { line-height: 1.4; }
-        .function-text { color: var(--text-primary); font-size: 0.85rem; }
-
-        .risk-assessment {
-          background: rgba(239, 68, 68, 0.05);
-          border: 1px solid rgba(239, 68, 68, 0.1);
-          padding: 1rem;
-          border-radius: 8px;
-        }
-
-        .assessment-header {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: #ef4444;
-          font-size: 0.8rem;
-          font-weight: 700;
-          margin-bottom: 0.5rem;
-          text-transform: uppercase;
-        }
-
-        .risk-assessment p {
-          font-size: 0.8rem;
-          line-height: 1.5;
-          color: var(--text-secondary);
-        }
+        .unit-info { display: flex; flex-direction: column; gap: 0.5rem; }
+        .info-item { display: flex; gap: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
 
         .unit-footer {
           margin-top: auto;
@@ -302,30 +302,32 @@ export const SetrabesDirectory: React.FC = () => {
           border-top: 1px solid var(--border-glass);
         }
 
-        .public-served {
-          font-size: 0.75rem;
-          color: var(--text-secondary);
-          font-style: italic;
-        }
+        .public-served { font-size: 0.7rem; color: var(--text-secondary); font-style: italic; }
 
-        .source-btn {
+        .action-btn-primary {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          background: rgba(0, 242, 255, 0.1);
-          border: 1px solid rgba(0, 242, 255, 0.2);
-          color: var(--accent-cyan);
-          font-size: 0.75rem;
-          font-weight: 700;
+          background: var(--accent-cyan);
+          border: none;
+          color: black;
+          font-size: 0.7rem;
+          font-weight: 800;
           padding: 0.4rem 0.8rem;
           border-radius: 6px;
           cursor: pointer;
+          transition: 0.2s;
+          text-transform: uppercase;
+        }
+
+        .action-btn-primary:hover {
+          transform: scale(1.05);
+          box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
         }
 
         @media (max-width: 640px) {
           .units-grid { grid-template-columns: 1fr; }
           .directory-controls { padding: 1rem; }
-          .unit-card { padding: 1rem; }
         }
       `}} />
     </div>
