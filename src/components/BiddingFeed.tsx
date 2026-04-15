@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { type Bidding, fetchRRBiddings } from '../services/pncpApi';
+import { type Bidding, searchTenders } from '../services/pncpApi';
 import { RefreshCw, ExternalLink, Calendar, Landmark } from 'lucide-react';
 
 export const BiddingFeed: React.FC = () => {
@@ -8,8 +8,8 @@ export const BiddingFeed: React.FC = () => {
 
   const loadData = async () => {
     setLoading(true);
-    const data = await fetchRRBiddings();
-    setBiddings(data);
+    const data = await searchTenders('');
+    setBiddings(data.slice(0, 10)); // Show top 10
     setLoading(false);
   };
 
@@ -31,31 +31,31 @@ export const BiddingFeed: React.FC = () => {
 
       <div className="feed-list">
         {loading && biddings.length === 0 ? (
-          <div className="loading-state">Carregando feed em tempo real...</div>
+          <div className="loading-state">Realizando scraping em tempo real...</div>
         ) : (
           biddings.map((bid) => (
-            <div key={bid.numeroControlePNCP} className="bid-item">
+            <div key={bid.id} className="bid-item">
               <div className="bid-header">
-                <span className="bid-mode">{bid.modalidadeNome}</span>
+                <span className={`bid-mode ${bid.tipo === 'Ata de Registro de Preço' ? 'arp' : ''}`}>
+                  {bid.tipo === 'Ata de Registro de Preço' ? 'ARP' : 'Licitação'}
+                </span>
                 <span className="bid-value">
-                  {bid.valorEstimadoTotal ? 
-                    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(bid.valorEstimadoTotal) 
-                    : 'Valor não informado'}
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(bid.valor)}
                 </span>
               </div>
               <p className="bid-object">{bid.objeto}</p>
               <div className="bid-footer">
                 <div className="bid-meta">
                   <Landmark size={12} />
-                  <span>{bid.orgaoEntidade.razaoSocial}</span>
+                  <span title={bid.orgao}>{bid.orgao}</span>
                 </div>
                 <div className="bid-meta">
                   <Calendar size={12} />
-                  <span>{new Date(bid.dataPublicacaoPncp).toLocaleDateString('pt-BR')}</span>
+                  <span>{new Date(bid.dataPublicacao).toLocaleDateString('pt-BR')}</span>
                 </div>
                 <button 
                   className="bid-link" 
-                  onClick={() => window.open(`https://pncp.gov.br/app/editais/${bid.numeroControlePNCP}`, '_blank')}
+                  onClick={() => window.open(bid.link, '_blank')}
                 >
                   <ExternalLink size={14} />
                 </button>

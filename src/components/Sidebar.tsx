@@ -11,7 +11,8 @@ import {
   X,
   Map as MapIcon,
   TrendingUp,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  Search as MarketIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -38,6 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'stats', label: 'Dados & Estatísticas', icon: BarChart3 },
     { id: 'units', label: 'Unidades SETRABES', icon: MapIcon },
     { id: 'finance', label: 'Finanças RR', icon: TrendingUp },
+    { id: 'market', label: 'Market Intelligence', icon: MarketIcon },
     { id: 'eng', label: 'Engenharia', icon: Cpu },
     { id: 'settings', label: 'Configurações', icon: SettingsIcon },
   ];

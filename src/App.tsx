@@ -7,6 +7,7 @@ import { EngStandards } from './components/EngStandards';
 import { SetrabesDirectory } from './components/SetrabesDirectory';
 import { FinanceAnalytics } from './components/FinanceAnalytics';
 import { Settings } from './components/Settings';
+import { TenderIntelligence } from './components/TenderIntelligence';
 import { Menu, X } from 'lucide-react';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
       case 'eng': return <EngStandards />;
       case 'units': return <SetrabesDirectory />;
       case 'finance': return <FinanceAnalytics />;
+      case 'market': return <TenderIntelligence />;
       case 'settings': return <Settings />;
       default: return <Overview />;
     }
