@@ -89,8 +89,8 @@ export async function fetchRRAtas(page = 1, size = 10): Promise<Bidding[]> {
  */
 export async function searchTenders(query: string): Promise<Bidding[]> {
   const [biddings, atas] = await Promise.all([
-    fetchRRBiddings(1, 20),
-    fetchRRAtas(1, 20)
+    fetchRRBiddings(1, 50),
+    fetchRRAtas(1, 50)
   ]);
 
   const combined = [...biddings, ...atas];
