@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getLiveSetrabesUnits, type ServerlessUnit } from '../services/neonDb';
+import { UnitModal } from './UnitModal';
 import { 
   Search, 
   MapPin, 
@@ -15,6 +16,7 @@ export const SetrabesDirectory: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedUnit, setSelectedUnit] = useState<ServerlessUnit | null>(null);
 
   const categories = ['Todos', 'Acolhimento', 'Segurança Alimentar', 'Especializada', 'Logística', 'Sede'];
 
@@ -88,7 +90,7 @@ export const SetrabesDirectory: React.FC = () => {
         <div className="units-grid">
           {filteredUnits.length > 0 ? (
             filteredUnits.map((unit) => (
-              <div key={unit.id} className="glass-card unit-card">
+              <div key={unit.id} className="glass-card unit-card" onClick={() => setSelectedUnit(unit)}>
                 <div className="unit-header">
                   <span className="unit-id">{unit.id}</span>
                   <span className={`category-badge ${unit.category.toLowerCase().replace(' ', '-')}`}>
@@ -121,8 +123,8 @@ export const SetrabesDirectory: React.FC = () => {
                   <span className="public-served">Público: {unit.public_served}</span>
                   <button 
                     className="source-btn" 
-                    onClick={() => window.open(unit.source_url, '_blank')}
-                    title="Acessar Fonte BD/Governo"
+                    onClick={(e) => { e.stopPropagation(); setSelectedUnit(unit); }}
+                    title="Acessar Banco de Arquivos"
                   >
                     <Database size={14} />
                     Origem
@@ -136,6 +138,10 @@ export const SetrabesDirectory: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+
+      {selectedUnit && (
+        <UnitModal unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
