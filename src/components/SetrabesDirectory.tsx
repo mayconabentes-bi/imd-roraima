@@ -4,8 +4,7 @@ import {
   Search, 
   MapPin, 
   ShieldAlert, 
-  Info, 
-  ExternalLink,
+  Info,
   Filter,
   Loader2,
   Database

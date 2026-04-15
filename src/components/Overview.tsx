@@ -4,8 +4,7 @@ import {
   Database, 
   ShieldCheck, 
   Terminal,
-  Cpu,
-  Loader2
+  Cpu
 } from 'lucide-react';
 import { legalDocs } from '../data/legal';
 import { secretariatStats, incidents } from '../data/stats';
