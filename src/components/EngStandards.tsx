@@ -64,6 +64,21 @@ export const EngStandards: React.FC = () => {
           gap: 1.5rem;
         }
 
+        @media (max-width: 768px) {
+          .eng-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .module-container {
+            padding: 1rem;
+          }
+          .calculator-card {
+            padding: 1.5rem;
+          }
+        }
+
         .eng-card {
           padding: 2rem;
           display: flex;

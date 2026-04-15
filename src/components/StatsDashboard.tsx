@@ -232,6 +232,27 @@ export const StatsDashboard: React.FC = () => {
           height: 100%;
           transition: width 1s ease-out;
         }
+
+        @media (max-width: 768px) {
+          .stats-grid {
+            grid-template-columns: 1fr;
+          }
+          .table-header, .table-row {
+            grid-template-columns: 100px 80px 150px 100px;
+          }
+          .incident-table {
+            overflow-x: auto;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .module-container {
+            padding: 1rem;
+          }
+          .sec-metrics {
+            grid-template-columns: 1fr;
+          }
+        }
       `}} />
     </div>
   );

@@ -135,6 +135,21 @@ export const Overview: React.FC = () => {
           gap: 1.5rem;
         }
 
+        @media (max-width: 1024px) {
+          .overview-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .overview-stats {
+            grid-template-columns: 1fr;
+          }
+          .module-container {
+            padding: 1rem;
+          }
+        }
+
         .card-header {
           display: flex;
           justify-content: space-between;

@@ -91,6 +91,26 @@ export const LegalHub: React.FC = () => {
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
+          gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+          .module-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .search-bar {
+            width: 100%;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .module-container {
+            padding: 1rem;
+          }
+          .doc-grid {
+            grid-template-columns: 1fr;
+          }
         }
 
         .subtitle {
