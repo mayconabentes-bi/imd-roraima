@@ -92,5 +92,17 @@ export const dataSources = [
     type: 'PDF Scraping',
     url: 'https://transparencia.rr.leg.br/',
     description: 'Relatórios de tramitação de LDO e LOA.'
+  },
+  {
+    name: 'IBGE (Relógio da População)',
+    type: 'REST API',
+    url: 'https://servicodados.ibge.gov.br/api/docs/projecoes',
+    description: 'Projeção populacional em tempo real para Roraima.'
+  },
+  {
+    name: 'Banco Central do Brasil (SGS)',
+    type: 'REST API',
+    url: 'https://www3.bcb.gov.br/sgspub/',
+    description: 'Sistema Gerenciador de Séries Temporais (SELIC, IPCA).'
   }
 ];
