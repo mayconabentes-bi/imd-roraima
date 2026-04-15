@@ -1,23 +1,37 @@
-import React, { useState } from 'react';
-import { setrabesUnits } from '../data/units';
+import React, { useState, useEffect } from 'react';
+import { getLiveSetrabesUnits, type ServerlessUnit } from '../services/neonDb';
 import { 
   Search, 
   MapPin, 
   ShieldAlert, 
   Info, 
   ExternalLink,
-  Filter
+  Filter,
+  Loader2,
+  Database
 } from 'lucide-react';
 
 export const SetrabesDirectory: React.FC = () => {
+  const [units, setUnits] = useState<ServerlessUnit[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
 
   const categories = ['Todos', 'Acolhimento', 'Segurança Alimentar', 'Especializada', 'Logística', 'Sede'];
 
-  const filteredUnits = setrabesUnits.filter(unit => {
+  useEffect(() => {
+    const fetchDB = async () => {
+      setLoading(true);
+      const data = await getLiveSetrabesUnits();
+      setUnits(data);
+      setLoading(false);
+    };
+    fetchDB();
+  }, []);
+
+  const filteredUnits = units.filter(unit => {
     const matchesSearch = unit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         unit.address.toLowerCase().includes(searchTerm.toLowerCase());
+                         (unit.address || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'Todos' || unit.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -27,8 +41,14 @@ export const SetrabesDirectory: React.FC = () => {
       <header className="module-header">
         <div>
           <h1 className="gradient-text">Unidades Estratégicas SETRABES</h1>
-          <p className="subtitle">Mapeamento de inteligência, endereços e perfis de risco operacional.</p>
+          <p className="subtitle">Gestão de infraestrutura conectada ao vivo via PostgreSQL (Módulo Serverless).</p>
         </div>
+        {!loading && (
+          <div className="live-status">
+            <div className="pulse-dot"></div>
+            <span>NeonDB LIVE</span>
+          </div>
+        )}
       </header>
 
       <div className="directory-controls glass-card">
@@ -57,57 +77,67 @@ export const SetrabesDirectory: React.FC = () => {
         </div>
       </div>
 
-      <div className="units-grid">
-        {filteredUnits.length > 0 ? (
-          filteredUnits.map((unit) => (
-            <div key={unit.id} className="glass-card unit-card">
-              <div className="unit-header">
-                <span className="unit-id">{unit.id}</span>
-                <span className={`category-badge ${unit.category.toLowerCase().replace(' ', '-')}`}>
-                  {unit.category}
-                </span>
-              </div>
-              
-              <h3>{unit.name}</h3>
-              
-              <div className="unit-info">
-                <div className="info-item">
-                  <MapPin size={16} className="icon-blue" />
-                  <span>{unit.address}</span>
+      {loading ? (
+        <div className="loading-state glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
+          <Loader2 size={48} className="animate-spin text-cyan" style={{ margin: '0 auto 1rem' }} />
+          <h3>Sincronizando com Banco de Dados</h3>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            Estabelecendo túnel seguro com PostgreSQL (US-EAST-1)...
+          </p>
+        </div>
+      ) : (
+        <div className="units-grid">
+          {filteredUnits.length > 0 ? (
+            filteredUnits.map((unit) => (
+              <div key={unit.id} className="glass-card unit-card">
+                <div className="unit-header">
+                  <span className="unit-id">{unit.id}</span>
+                  <span className={`category-badge ${unit.category.toLowerCase().replace(' ', '-')}`}>
+                    {unit.category}
+                  </span>
                 </div>
-                <div className="info-item">
-                  <Info size={16} className="icon-cyan" />
-                  <p className="function-text">{unit.function}</p>
+                
+                <h3>{unit.name}</h3>
+                
+                <div className="unit-info">
+                  <div className="info-item">
+                    <MapPin size={16} className="icon-blue" />
+                    <span>{unit.address}</span>
+                  </div>
+                  <div className="info-item">
+                    <Info size={16} className="icon-cyan" />
+                    <p className="function-text">{unit.function_desc}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="risk-assessment">
-                <div className="assessment-header">
-                  <ShieldAlert size={16} />
-                  <span>Perfil de Risco & Justificativa</span>
+                <div className="risk-assessment">
+                  <div className="assessment-header">
+                    <ShieldAlert size={16} />
+                    <span>Perfil de Risco & Justificativa</span>
+                  </div>
+                  <p>{unit.risk_profile}</p>
                 </div>
-                <p>{unit.riskProfile}</p>
-              </div>
 
-              <div className="unit-footer">
-                <span className="public-served">Público: {unit.publicServed}</span>
-                <button 
-                  className="source-btn" 
-                  onClick={() => window.open(unit.sourceUrl, '_blank')}
-                  title="Verificar Caminho de Busca"
-                >
-                  <ExternalLink size={14} />
-                  Fonte
-                </button>
+                <div className="unit-footer">
+                  <span className="public-served">Público: {unit.public_served}</span>
+                  <button 
+                    className="source-btn" 
+                    onClick={() => window.open(unit.source_url, '_blank')}
+                    title="Acessar Fonte BD/Governo"
+                  >
+                    <Database size={14} />
+                    Origem
+                  </button>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="empty-state glass-card">
+              Nenhuma unidade encontrada para os filtros selecionados.
             </div>
-          ))
-        ) : (
-          <div className="empty-state glass-card">
-            Nenhuma unidade encontrada para os filtros selecionados.
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <style dangerouslySetInnerHTML={{ __html: `
         .directory-controls {
@@ -277,8 +307,8 @@ export const SetrabesDirectory: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          background: var(--bg-accent);
-          border: none;
+          background: rgba(0, 242, 255, 0.1);
+          border: 1px solid rgba(0, 242, 255, 0.2);
           color: var(--accent-cyan);
           font-size: 0.75rem;
           font-weight: 700;

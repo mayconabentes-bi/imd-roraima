@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Activity, 
   Database, 
   ShieldCheck, 
   Terminal,
-  Cpu
+  Cpu,
+  Loader2
 } from 'lucide-react';
 import { legalDocs } from '../data/legal';
 import { secretariatStats, incidents } from '../data/stats';
-import { setrabesUnits } from '../data/units';
+import { getLiveSetrabesUnits } from '../services/neonDb';
 
 import { BiddingFeed } from './BiddingFeed';
 
 export const Overview: React.FC = () => {
+  const [unitsCount, setUnitsCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getLiveSetrabesUnits().then(data => setUnitsCount(data.length));
+  }, []);
+
   const stats = [
     { label: 'Documentos Legais', value: legalDocs.length, icon: Database, color: '#3b82f6' },
-    { label: 'Unidades SETRABES', value: setrabesUnits.length, icon: ShieldCheck, color: '#10b981' },
+    { label: 'Unidades SETRABES (DB)', value: unitsCount !== null ? unitsCount : '...', icon: ShieldCheck, color: '#10b981' },
     { label: 'Incidentes Registrados', value: incidents.length, icon: Activity, color: '#f59e0b' },
     { label: 'Normativas Técnicas', value: 12, icon: Cpu, color: '#00f2ff' },
   ];
