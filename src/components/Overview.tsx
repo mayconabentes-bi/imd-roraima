@@ -3,7 +3,6 @@ import {
   Activity, 
   Database, 
   ShieldCheck, 
-  Map as MapIcon, 
   Terminal,
   Cpu
 } from 'lucide-react';

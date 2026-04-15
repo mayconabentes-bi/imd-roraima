@@ -25,7 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     <aside className="sidebar">
       <div className="sidebar-header">
         <Shield className="logo-icon" />
-        <span className="logo-text">MARKET INTEL RR</span>
+        <span className="logo-text">Inteligência de Mercado Semper - RR</span>
       </div>
       
       <nav className="sidebar-nav">
