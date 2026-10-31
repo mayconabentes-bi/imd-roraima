@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# IMD Roraima — Inteligência de Mercado e Dados
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Painel web para consolidar informações estratégicas, indicadores, referências legais e análises aplicadas ao contexto de Roraima.
 
-Currently, two official plugins are available:
+O projeto demonstra como dados dispersos podem ser organizados em uma experiência única de consulta e apoio à tomada de decisão.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Problema abordado
 
-## React Compiler
+Gestores e analistas frequentemente trabalham com informações distribuídas entre documentos, planilhas, portais e bases distintas. O IMD Roraima foi estruturado para reunir essas dimensões em um painel navegável, responsivo e orientado à análise.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Módulos
 
-## Expanding the ESLint configuration
+- visão executiva;
+- indicadores e estatísticas;
+- inteligência sobre contratações;
+- análises financeiras;
+- central de referências legais;
+- normas e padrões de engenharia;
+- diretório de unidades;
+- configurações da aplicação.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tecnologias
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React 19;
+- TypeScript;
+- Vite;
+- Recharts;
+- Framer Motion;
+- Lucide React;
+- Neon Serverless;
+- GitHub Pages.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Execução local
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Para validar a versão de produção:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run lint
+npm run build
+npm run preview
 ```
+
+## Objetivo profissional
+
+Este repositório integra o portfólio de **Maycon Bentes** e evidencia competências em:
+
+- Inteligência de Mercado;
+- Business Intelligence;
+- organização de informações estratégicas;
+- desenvolvimento de painéis gerenciais;
+- tradução de necessidades de negócio em soluções tecnológicas.
+
+## Status
+
+Projeto em evolução. Dados demonstrativos devem ser validados antes de qualquer uso institucional ou tomada de decisão.
